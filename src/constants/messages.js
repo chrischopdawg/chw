@@ -1,0 +1,36 @@
+export const messages = {
+    TRY_AUTH_REJECTED: "The username or password you entered was incorrect. Please try again.",
+    TRY_RESET_PASSWORD_FULFILLED: "An email containing a link to create a new password has been sent. Please check your INBOX (or Junk Mail) forlder in a few minutes.",
+    TRY_RESET_PASSWORD_REJECTED: "The email address you entered is not valid, or not registered. Please enter another one and try again.",
+    TRY_REGISTER_FULFILLED_ADDED: "User Successfully Added",
+    TRY_REGISTER_FULFILLED_UPDATED: "User profile updated successfully! An notification email has been sent to {0}.",
+    TRY_REGISTER_REJECTED_EMAIL_EXISTS: "Another user is registered using that email address. Please enter another address.",
+    TRY_REGISTER_FORM_NOT_COMPLETE: "Oops! You forgot to fill out one or more required fields. Please review the form below and try again!",
+    TRY_RESET_FULLFILLED_PASSWORD_UPDATES: "User password updated successfully! An notification email has been sent to {0}.",
+    TRY_RESET_PASSWORD_ERROR: "Oops! There was a problem with the way you entered the password. Please review the form below and try again!",
+    TRY_WORKORDER_ACCEPT: "Work order # {0} as been accepted and has a \"pending\" status. Please contact the customer to confirm the appointment date and time.",
+    TRY_WORKORDER_ASSIGN: "Work order has been assigned to {0}!",
+    TRY_WORKORDER_ACCEPT_REJECTED: "The Technician you just tried to assign is not available at the appoijntment date and time selected for this work order. Please choose another Technician.",
+    TRY_WORKORDER_ACCEPT_REASSIGN: "Work order has been re-assigned to {0}!",
+    TRY_WORKORDER_UPDATED: "Work order # {0} has been updated and requires you to submit a diagnosis. It has been moved to the Diagnosis tab.",
+    TRY_WORKORDER_CANCELED: "Work order # {0} has been cancelled and your company Admin user has been notified!",
+    TRY_WORKORDER_DIAGNOSIS: "The diagnosis for work order # {0} has been submitted. You will now be redirect to the Completed jobs tab.",
+    TRY_WORKORDER_UNDER_AUTHORIZATION_LIMIT: "Work order # {0} was completed under the authorization limit. No diagnosis will be required.",
+    TRY_WORKORDER_NO_CHANGES: "No changes can be made to the work order at this time.",
+    TRY_IMAGES_UPLOAD: "The images you selected have been uploaded!",
+    TRY_DIAGNOSIS_NOTES_UPDATED: "Thank you! The notes you entered have been added.",
+    TRY_COMPANY_PROFILE_UPDATED: "Company profile was updated successfully!",
+    TRY_USER_PROFILE_UPDATED: "User profile updated successfully!",
+    TRY_USER_LOGIN_CREDENTIALS_UPDATED: "The user login credentials have been updated! Changes will take up to 24 hours before they take effect.",
+
+    TRY_LOGOUT_TITLE: "You are about to logout of the Choice Home Warranty App",
+    TRY_LOGOUT_MESSAGE: "Are you sure you want to preform this action?",
+
+    TRY_DIAGNOSIS_NOT_SUBMITTED_TITLE: "You haven't submitted this diagnosis yet!",
+    TRY_DIAGNOSIS_NOT_SUBMITTED_MESSAGE: "The diagnosis details you just entered will be lost. Are you sure you want to leave this screen?",
+
+    TRY_START_TRACKING_WORK_ORDER_TITLE: "You are about to start tracking a work order",
+    TRY_START_TRACKING_WORK_ORDER_MESSAGE: "This will also notify the customer that you are on your way to their location. Do you wish to continue?",
+
+    MSG_SELECT_ACTION: "Select an action",
+}
