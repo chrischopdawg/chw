@@ -6,23 +6,10 @@ import Feather from 'react-native-vector-icons/Feather';
 //import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import PropTypes from 'prop-types';
 import { connect, } from 'react-redux';
-//import { getUsers } from '../../redux/store';
+import { getWorkOrdersUnclaimed } from '../../redux/store';
 import { Actions } from 'react-native-router-flux';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-
-//Map the redux state to your props.
-const mapStateToProps = state => ({
-  user: state.user,
-  auth: state.auth,
-  loading: state.loading
-})
-
-//Map your action creators to your props.
-const mapDispatchToProps = {
-  //getUsers: (token, vendor_id) => getUsers(token, vendor_id),
-}
-
 
 class VRequestScreen extends React.Component {
   static navigationOptions = {
@@ -31,7 +18,7 @@ class VRequestScreen extends React.Component {
   state = {
     user: null,
     requests: [
-      { id: 0, workordernum: 724643510, first_line: "Drywer, Whirlpool / Electric", second_line: "Sanger, TX 76266-7558" },
+      { id: 0, workordernum: 724643510, first_line: "Dryer, Whirlpool / Electric", second_line: "Sanger, TX 76266-7558" },
       { id: 1, workordernum: 555555555, first_line: "Air Conditioning, Mitsubishi / Electric", second_line: "Sanger, TX 76266-7558" },
       { id: 2, workordernum: 704565950, first_line: "Heating and Ductwork, Mitsubishi / Electric", second_line: "Sanger, TX 76266-7558" },
     ]
@@ -39,6 +26,7 @@ class VRequestScreen extends React.Component {
   componentDidMount() {
     //console.log(this.props);
     //this.props.getUsers(this.props.auth.token.message, this.props.user.vendor_id);
+    this.props.getWorkOrdersUnclaimed(this.props.auth, this.props.user);
   }
 
   _removeRequest(id) {
@@ -51,7 +39,7 @@ class VRequestScreen extends React.Component {
 
   
   render () {
-    const { users, loading } = this.props;
+    const { users, loading, workordersUnclaimed } = this.props;
       return (
         <SafeAreaView style={[{flex:1}]}>
           <View style={[{height:viewportHeight}]}>
@@ -64,7 +52,7 @@ class VRequestScreen extends React.Component {
             {!loading ? (
               <ScrollView style={[{height:viewportHeight}]}>
               <View style={styles.containerInner}>
-                <View style={[{alignItems:'center'},{alignContent:'center'},{padding:10}]}>
+                <View style={[{alignItems:'center'},{alignContent:'center'},{padding:10},{marginVertical:5}]}>
                   <Text>Total of {this.state.requests.length} Work Order Requests</Text>
                 </View>
                 {this.state.requests.map((value, key) => 
@@ -105,6 +93,21 @@ VRequestScreen.propTypes = {
 VRequestScreen.defaultProps = {
   id: 0
 }
+
+
+//Map the redux state to your props.
+const mapStateToProps = state => ({
+  user: state.user,
+  auth: state.auth,
+  loading: state.loading
+})
+
+//Map your action creators to your props.
+const mapDispatchToProps = {
+  //getUsers: (token, vendor_id) => getUsers(token, vendor_id),
+  getWorkOrdersUnclaimed: (user, auth) => getWorkOrdersUnclaimed(user, auth),
+}
+
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(VRequestScreen);

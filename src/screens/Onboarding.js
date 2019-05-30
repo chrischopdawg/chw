@@ -1,13 +1,20 @@
 import React from 'react';
-import { Platform, Image, Modal, TouchableHighlight, View, ScrollView, Text, StatusBar, SafeAreaView } from 'react-native';
+import { Image, Modal, TouchableHighlight, View, ScrollView, Text, StatusBar, SafeAreaView } from 'react-native';
 import WebView from 'react-native-webview';
 import PrimaryButton from '../components/buttons/PrimaryButton';
 import styles, { colors, viewportHeight } from '../styles/index.style';
 import LinearGradient from 'react-native-linear-gradient';
 import { Actions } from 'react-native-router-flux';
+import PopdownComponent from '../components/Popdown';
+
+import { connect } from 'react-redux';
+
 
 import { terms } from '../../assets/html/terms_of_service';
-export default class OnboardingScreen extends React.Component {
+
+
+
+class OnboardingScreen extends React.Component {
     
     static navigationOptions = {
         header: null
@@ -27,6 +34,19 @@ export default class OnboardingScreen extends React.Component {
     _goToLogin() {
       Actions.login();
     }
+
+    _showPopdown() {
+      const nullmessage = {
+        showPopdown: false,
+        message: '',
+        type: 'error'
+      };
+      if(this.state.message) {
+        //console.log(this.state.message); 
+        return (<PopdownComponent endFunction={() => this.setState({message:nullmessage})} message={this.state.message} />);
+      }
+    }
+    
     render () {
         return (
             <SafeAreaView>
@@ -39,12 +59,13 @@ export default class OnboardingScreen extends React.Component {
                     
                     <View>
                       <LinearGradient colors={[colors.white, colors.chwGradientBlue]} style={[{height:viewportHeight}]} >
+                        {this._showPopdown()}
                         <View style={[styles.logoContainer]}>
                           <Image resizeMode="contain" source={require('../../assets/images/logo.png')} style={styles.logoSmall}/>
                         </View>
                         <View style={[styles.containerInner,{flex:1}]}>
                           <Text style={styles.title}>Welcome to Choice Home Warranty</Text>
-                          <Text style={styles.subtitle}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis et nibh nec mi dapibus faucibus vel vitae nisi. Nullam ut urna accumsan, auctor metus sit amet, condimentum dui.</Text>
+                          <Text style={styles.subtitle}>As a CHW vendor you play an important role in the success of our company and yours. By using this App, you can streamline the communication and work order diagnosis submission process, and ensure the continued satisfaction of our customers.</Text>
                         </View>
                         
                         <View style={[styles.containerInner,{flex:0}]}>
@@ -52,6 +73,7 @@ export default class OnboardingScreen extends React.Component {
                           <PrimaryButton
                             onPress={() => this._goToLogin()}
                             text="Login"/>
+                            
                             <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom:25 }}>
                               <Text style={styles.smallText}>By pressing "Login" button above, I aknowledge I have read and agree to the <Text style={[{color: colors.chwBlue},{fontWeight:'bold'}]} onPress={() => {this.setModalVisible(!this.state.modalVisible, true);}}>Terms of Use</Text> and <Text style={[{color: colors.chwBlue},{fontWeight:'bold'}]} onPress={() => {this.setModalVisible(!this.state.modalVisible, false);}}>Privacy Policy</Text></Text>
                             </View>
@@ -114,3 +136,19 @@ export default class OnboardingScreen extends React.Component {
         );
     }
 }
+
+
+//Map the redux state to your props.
+const mapStateToProps = state => ({
+  auth: state.auth,
+  messageLogin: state.messageLogin,
+  loading: state.loading
+})
+
+//Map your action creators to your props.
+const mapDispatchToProps = {
+  //postAuthToken: user => postAuthToken(user),
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(OnboardingScreen);

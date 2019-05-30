@@ -119,7 +119,7 @@ class App extends React.Component {
             hideNavBar={true}
           >
             <Scene key="onboarding"
-              component={LoginScreen}
+              component={OnboardingScreen}
               title="Onboarding"
               initial
             />
@@ -143,12 +143,11 @@ class App extends React.Component {
                   key="VNotifications"
                   component={VTNotificationsScreen}
                   navBar={null}
-                  initial
                 />
               <Scene
                 key="VSchedule"
                 component={VScheduleScreen}
-                
+                initial
                 />
                 
               <Scene

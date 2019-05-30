@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StatusBar, SafeAreaView } from 'react-native';
+
 import PrimaryButton from '../components/buttons/PrimaryButton';
 import styles, { colors, viewportHeight } from '../styles/index.style';
 import { TextInput } from 'react-native-gesture-handler';
@@ -51,39 +52,36 @@ class ResetPasswordScreen extends React.Component {
         const { loading, messageResetPassword } = this.props;
 
         return (
-            <SafeAreaView >
+            <SafeAreaView>
                 <View>
                     <StatusBar
-                      translucent={false}
-                      backgroundColor={'rgba(0, 0, 0, 0.3)'}
-                      barStyle={'light-content'}
+                    translucent={false}
+                    backgroundColor={'rgba(0, 0, 0, 0.3)'}
+                    barStyle={'light-content'}
                     />
                     
                     <View>
-                        <LinearGradient colors={[colors.white, colors.chwAcceptButtonBlue]} style={[{height:viewportHeight}]} >
+                        <LinearGradient colors={[colors.white, colors.chwGradientBlue]} style={[{height:viewportHeight}]} >
                             <View style={styles.containerInner}>
-                                <Text style={styles.title}>Reset Your Password</Text>
-
+                                <Text style={styles.smallTitle}>Reset Your Password</Text>
+                                <Text>Please enter your email address. You will receive a link to create a new password via email.</Text>
                                 <TextInput
-                                    style={styles.textInput}
+                                     style={[styles.textInput,styles.textInputShadow,{marginVertical:25}]}
                                     keyboardType={'email-address'}
                                     onChangeText={(text) => this.setState({resetemail:text})}
                                     value={this.state.resetemail}
                                     placeholder={"Enter Email Address"}
                                 />
-
+                            </View>
+                            <View style={[styles.containerInner, {flex:0},{textAlign:'center'},{marginBottom:25}]}>
                                 <PrimaryButton
-                                    onPress={() => this._resetPassword()}
-                                    text="Request New Password"
-                                    enabled={this.state.resetemail != {}} />
+                                onPress={() => this._resetPassword()}
+                                text="Request New Password"
+                                enabled={this.state.resetemail != ''} />
                             </View>
                         </LinearGradient>
                     </View>  
                 </View>
-                {!loading && messageResetPassword ? 
-                 ( this._showMessage(messageResetPassword) )
-                 : ( null ) }
-
             </SafeAreaView>
         );
     }

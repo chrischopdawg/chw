@@ -41,6 +41,7 @@ class VTNotificationsScreen extends React.Component {
             "appointmentId": ""
 
     notifications: [
+       
       { id: 1, type: "assigned", title: "You have 1 upcoming assigned work order.", message: "Air Conditioning\nWed, Oct 18, 2017\n9:00am - 7:00pm", time: "3:16pm"},
       { id: 2, type: "diagnosis", title: "3 work orders require a diagnosis.", message: null, time: "12:45pm"},
       { id: 3, type: "requests", title: "You have 12 work order requests.", message: null, time: "12:45pm"},
@@ -78,8 +79,7 @@ class VTNotificationsScreen extends React.Component {
     }
   }
   render () {
-    const { user, loading, notifications } = this.props;
-
+    const { notifications } = this.props;
     return (
       <SafeAreaView style={[{flex:1}]}>
         <View style={[{height:viewportHeight}]}>
@@ -92,6 +92,12 @@ class VTNotificationsScreen extends React.Component {
             <Text style={styles.title}>Notifications</Text>
           </View>
           {notifications && notifications == [] ? (
+            <View style={[styles.containerInner]}>
+            <View style={styles.nontificationsNone}>
+              <Text style={[{color:colors.chwDarkBlue}]}>There are currently no notifications!</Text>
+            </View>
+          </View>
+          ) : (
             <ScrollView 
             refreshControl={
                 <RefreshControl
@@ -99,23 +105,34 @@ class VTNotificationsScreen extends React.Component {
                   onRefresh={() => {this._notificationsRefresh()}}
                 />
               }
+              
             style={styles.containerInner}>
-              {this.state.notifications.map((value,key) => {
+              
+              {notifications.map((value,key) => {
+                /*
+                  applianceBrand: ""
+                  applianceSystem: ""
+                  applianceType: ""
+                  appointmentDate: ""
+                  appointmentId: ""
+                  stepId: ""
+                  type: "assigned"
+                  vendorId: ""
+                  workOrderId: "" 
+                */
                 return <TouchableOpacity key={key} style={styles.noticationContainer} onPress={() => this._openNotification(value)}>
-                  <Text style={styles.notificationTitle}>{value.title}</Text>
-                  {value.message ? (
-                    <Text style={styles.notificationMessage}>{value.message}</Text>
-                  ) : ( null )}
+                  <Text style={styles.notificationTitle}>Notification Title</Text>
+                  {value.applianceBrand ? (
+                    <View>
+                      <Text style={styles.notificationMessage}>{value.applianceBrand} {value.applianceSystem} - {value.applianceType}</Text>
+                      <Text style={styles.notificationMessage}>{value.appoointmentDate}</Text>
+                    </View>
+                    
+                  ) : ( <Text>No Data</Text> )}
                   <Text style={styles.notificationTime}>{value.time}</Text>
                 </TouchableOpacity>
               })}
             </ScrollView>
-          ) : (
-            <View style={[styles.containerInner]}>
-              <View style={styles.nontificationsNone}>
-                <Text style={[{color:colors.chwDarkBlue}]}>There are currently no notifications!</Text>
-              </View>
-            </View>
           )}
         </View>
       </SafeAreaView>      

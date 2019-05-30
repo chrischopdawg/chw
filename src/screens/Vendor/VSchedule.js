@@ -12,18 +12,6 @@ import VPendingScreen from './VPending';
 import VActiveScreen from './VActive';
 import VCompletedScreen from './VCompleted';
 
-//Map the redux state to your props.
-const mapStateToProps = state => ({
-  user: state.user,
-  loading: state.loading,
-})
-
-//Map your action creators to your props.
-const mapDispatchToProps = {
-  //getPeople: next => getPeople(next),
-
-}
-
 class VScheduleScreen extends React.Component {
   static navigationOptions = {
     header: null
@@ -36,7 +24,6 @@ class VScheduleScreen extends React.Component {
   }
 
   state = {
-    user: null,
     searching: false,
     search_param: '',
     current_view: this.CURRENT_VIEW.REQUEST,
@@ -61,7 +48,6 @@ class VScheduleScreen extends React.Component {
   }
   render () {
     const { user, loading } = this.props;
-    if(loading) {
       return (
         <SafeAreaView style={[{flex:1}]}>
           <View>
@@ -124,24 +110,20 @@ class VScheduleScreen extends React.Component {
           </View>
         </SafeAreaView>
       );
-    } else {
-      return (
-        <View style={[styles.containerInner]}>
-          <View style={styles.nontificationsNone}>
-            <Text style={[{color:colors.chwDarkBlue}]}>Loading.</Text>
-          </View>
-        </View>
-      )
-    }
   }
 }
 
-VScheduleScreen.propTypes = {
-  id: PropTypes.number.isRequired
-}
-VScheduleScreen.defaultProps = {
-  id: 0
-}
+//Map the redux state to your props.
+const mapStateToProps = state => ({
+  user: state.user,
+  auth: state.auth,
+  loading: state.loading,
+})
 
+//Map your action creators to your props.
+const mapDispatchToProps = {
+  //getPeople: next => getPeople(next),
+
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(VScheduleScreen);

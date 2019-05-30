@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, View, Text, StatusBar, SafeAreaView, CheckBox, Platform } from 'react-native';
+import { Image, View, Text, StatusBar, SafeAreaView, CheckBox } from 'react-native';
 import PrimaryButton from '../components/buttons/PrimaryButton';
 import styles, { colors, viewportHeight } from '../styles/index.style';
 import { TextInput } from 'react-native-gesture-handler';
@@ -7,22 +7,10 @@ import LinearGradient from 'react-native-linear-gradient';
 import { connect } from 'react-redux';
 import store, { postAuthToken } from '../redux/store';
 import { Actions } from 'react-native-router-flux';
-
+import PopdownComponent from '../components/Popdown';
 
 import FlashMessage, { showMessage } from 'react-native-flash-message';
 //import { ActionSheetCustom as ActionSheet } from 'react-native-custom-actionsheet'
-
-//Map the redux state to your props.
-const mapStateToProps = state => ({
-    auth: state.auth,
-    messageLogin: state.messageLogin,
-    loading: state.loading,
-})
-  
-//Map your action creators to your props.
-const mapDispatchToProps = {
-    postAuthToken: user => postAuthToken(user),
-}
 
 
 
@@ -37,7 +25,7 @@ class LoginScreen extends React.Component {
         modalVisible: false,
         email: '',
         password: '',
-        rememberme: true,
+        rememberme: true
     };
     constructor (props) {
         super(props);
@@ -55,25 +43,24 @@ class LoginScreen extends React.Component {
         this.props.postAuthToken(user);
     }
 
-    _showMessage(messageOptions) {
-        console.log('show a message ', messageOptions);
-        
-        setTimeout(() => {
-            console.log('timer bang');
-            showMessage(messageOptions);
-        }, 200);
-
-        return (
-            <FlashMessage ref={'login'} position="top" />
-        );
-    }
-
+    _showPopdown() {
+        const nullmessage = {
+          showPopdown: false,
+          message: '',
+          type: 'error'
+        };
+        if(this.state.message) {
+          //console.log(this.state.message); 
+          return (<PopdownComponent endFunction={() => this.setState({message:nullmessage})} message={this.state.message} />);
+        }
+      }
+    
+      
     render () {
         const { auth, loading, messageLogin } = this.props;
 
         return (
             <SafeAreaView >
-                
                 <View>
                     <StatusBar
                       translucent={false}
@@ -83,6 +70,7 @@ class LoginScreen extends React.Component {
                     
                     <View>
                         <LinearGradient colors={[colors.white, colors.chwGradientBlue]} style={[{height:viewportHeight}]} >
+                            {this._showPopdown()}
                             <View style={[styles.logoContainer]}>
                                 <Image resizeMode="contain" source={require('../../assets/images/logo.png')} style={styles.logoSmall}/>
                             </View>
@@ -126,14 +114,23 @@ class LoginScreen extends React.Component {
                         </LinearGradient>
                     </View>
                 </View> 
-                {!loading && messageLogin ? 
-                 ( this._showMessage(messageLogin) )
-                 : ( null ) }
-                
-               
             </SafeAreaView>
         );
     }
 }
+
+//Map the redux state to your props.
+const mapStateToProps = state => ({
+    auth: state.auth,
+    messageLogin: state.messageLogin,
+    loading: state.loading,
+    message: state.message
+})
+  
+//Map your action creators to your props.
+const mapDispatchToProps = {
+    postAuthToken: user => postAuthToken(user),
+}
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);

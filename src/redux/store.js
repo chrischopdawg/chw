@@ -15,6 +15,7 @@ import reducer, {
     fetchUserNotifications, fetchUserNotificationsFulfilled, fetchUserNotificationsRejected,
     fetchSchedule, fetchScheduleFulfilled, fetchScheduleRejected,
     fetchWorkOrderSchedule, fetchWorkOrderScheduleFulfilled, fetchWorkOrderScheduleRejected,
+    fetchWorkOrdersUnclaimed, fetchWorkOrdersUnclaimedFulfilled, fetchWorkOrdersUnclaimedRejected,
     
 } from './reducer';
 import { Actions } from 'react-native-router-flux';
@@ -24,6 +25,12 @@ import { messages } from '../constants/messages';
 
 //import { showMessage, MessageOptions } from 'react-native-flash-message';
 
+const isStage = true;
+var baseUrl = 'http://chopdawg.choicehomewarranty.com:8888/';
+if(!isStage) {
+    baseUrl = 'http://chopdawg.choicehomewarranty.com:8888/';
+}
+
 // Authorization 1.0.0
 // TRY_AUTH
 export const postAuthToken = (user) => {
@@ -32,7 +39,7 @@ export const postAuthToken = (user) => {
             dispatch(fetchDataAuth(true));
 
             const authorizePromise = await fetch(
-                'http://chopdawg.choicehomewarranty.com:8888/vendors/v1/authorize', {
+                baseUrl + 'vendors/v1/authorize', {
                     body: JSON.stringify(user),
                     headers: new Headers({
                         //'Authorization': `Bearer ${user.api_token}`,
@@ -45,6 +52,7 @@ export const postAuthToken = (user) => {
             const authToken = await authorizePromise.json();
             if(authToken.status == "error"){
                 console.log('auth login err');    
+                /*
                 Alert.alert(
                     authToken.status,
                     messages.TRY_AUTH_REJECTED,
@@ -53,6 +61,8 @@ export const postAuthToken = (user) => {
                     ],
                     {cancelable: false},
                   );
+                  */
+                 
                 dispatch(fetchDataRejectedAuth(authToken))
             } else {
                 // User Type Vendor/Admin goes to screens 2.0.0 V Job Requests
@@ -77,7 +87,7 @@ export const postRegister = (user) => {
             dispatch(fetchRegister(true));
 
             const registerPromise = await fetch(
-                'http://chopdawg.choicehomewarranty.com:8888/vendors/v1/register', {
+                baseUrl + 'vendors/v1/register', {
                     body: JSON.stringify(user),
                     headers: new Headers({
                         //'Authorization': `Bearer ${user.api_token}`,
@@ -116,7 +126,7 @@ export const getUsers = (token, vendor_id) => {
             dispatch(fetchUsers(true));
 
             const usersPromise = await fetch(
-                `http://chopdawg.choicehomewarranty.com:8888/vendors/v1/vendor/${vendor_id}/users`, {
+                baseUrl + `vendors/v1/vendor/${vendor_id}/users`, {
                     //body: JSON.stringify(user),
                     headers: new Headers({
                         'Authorization': `Bearer ${token}`,
@@ -148,7 +158,7 @@ export const getLogout = (token) => {
             dispatch(fetchLogout(true));
 
             const logoutPromise = await fetch(
-                'http://chopdawg.choicehomewarranty.com:8888/vendors/v1/logout', {
+                baseUrl + 'vendors/v1/logout', {
                     //body: JSON.stringify(email),
                     headers: new Headers({
                         'Authorization': `Bearer ${token}`,
@@ -180,7 +190,7 @@ export const postPassword = (email) => {
             dispatch(fetchDataReset(true));
 
             const resetPromise = await fetch(
-                'http://chopdawg.choicehomewarranty.com:8888/vendors/v1/password', {
+                baseUrl + 'vendors/v1/password', {
                     body: JSON.stringify(email),
                     headers: new Headers({
                         //'Authorization': `Bearer ${user.api_token}`,
@@ -230,7 +240,7 @@ export const putPassword = (user) => {
             dispatch(fetchDataReset(true));
 
             const resetPromise = await fetch(
-                'http://chopdawg.choicehomewarranty.com:8888/vendors/v1/password', {
+                baseUrl + 'vendors/v1/password', {
                     body: JSON.stringify(user),
                     headers: new Headers({
                         'Authorization': `Bearer ${user.reset_token}`,
@@ -282,8 +292,7 @@ export const getAccount = (token) => {
             console.log('get get account ', token);
              
             const userAccountPromise = await fetch(
-                'http://chopdawg.choicehomewarranty.com:8888/vendors/v1/account', {
-                    //body: JSON.stringify(email),
+                baseUrl + 'vendors/v1/account', {
                     headers: new Headers({
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
@@ -295,8 +304,7 @@ export const getAccount = (token) => {
             const userAccountResults = await userAccountPromise.json();
             console.log('User Account Results ', userAccountResults);
             if(userAccountResults.status == "error"){
-                dispatch(fetchAccountRejected(userAccountResults))
-                // display the results
+                dispatch(fetchAccountRejected(userAccountResults));
             } else {
                 dispatch(fetchAccountFulfilled(userAccountResults.message));
                 if(userAccountResults.message.user_type == "vendor") {
@@ -322,7 +330,7 @@ export const patchUser = (user, auth) => {
             dispatch(fetchUserUpdate(true));
              
             const _promise = await fetch(
-                'http://chopdawg.choicehomewarranty.com:8888/vendors/v1/user/' + user.id, {
+                baseUrl + 'vendors/v1/user/' + user.id, {
                     //body: JSON.stringify(email),
                     headers: new Headers({
                         'Authorization': `Bearer ${auth.token}`,
@@ -356,7 +364,7 @@ export const postDiagnosis = (workorder, auth, diagnosis) => {
             dispatch(fetchDiagnosis(true));
              
             const _promise = await fetch(
-                `http://chopdawg.choicehomewarranty.com:8888/vendors/v1/workorder/${workorder.workOrderNum}/diagnosis`, {
+                baseUrl + `vendors/v1/workorder/${workorder.workOrderNum}/diagnosis`, {
                     //body: JSON.stringify(email),
                     headers: new Headers({
                         'Authorization': `Bearer ${auth.token}`,
@@ -393,7 +401,7 @@ export const getNotifications = (user, auth) => {
             dispatch(fetchUserNotifications(true));
              
             const _promise = await fetch(
-                `http://chopdawg.choicehomewarranty.com:8888/vendors/v1/${user.user_type}/${user.vendor_id}/notification`, {
+                baseUrl + `vendors/v1/${user.user_type}/${user.vendor_id}/notification`, {
                     //body: JSON.stringify(email),
                     headers: new Headers({
                         'Authorization': `Bearer ${auth.token.message}`,
@@ -429,7 +437,7 @@ export const postSchedule = (user, auth) => {
             dispatch(fetchSchedule(true));
              
             const _promise = await fetch(
-                `http://chopdawg.choicehomewarranty.com:8888/vendors/v1/vendor/${user.id}/schedule`, {
+                baseUrl + `vendors/v1/vendor/${user.id}/schedule`, {
                     //body: JSON.stringify(email),
                     headers: new Headers({
                         'Authorization': `Bearer ${auth.token}`,
@@ -464,7 +472,7 @@ export const postWorkOrderAssignTechSchedule = (workorder, auth) => {
             dispatch(fetchWorkOrderAssignTechSchedule(true));
              
             const _promise = await fetch(
-                `http://chopdawg.choicehomewarranty.com:8888/vendors/v1/workorder/${workorder.workOrderNum}/assign-technicians`, {
+                baseUrl + `vendors/v1/workorder/${workorder.workOrderNum}/assign-technicians`, {
                     //body: JSON.stringify(email),
                     headers: new Headers({
                         'Authorization': `Bearer ${auth.token}`,
@@ -499,7 +507,7 @@ export const postWorkOrderAssignSchedule = (workorder, auth) => {
             dispatch(fetchWorkOrderAssignSchedule(true));
              
             const _promise = await fetch(
-                `http://chopdawg.choicehomewarranty.com:8888/vendors/v1/workorder/${workorder.workOrderNum}/assign`, {
+                baseUrl + `vendors/v1/workorder/${workorder.workOrderNum}/assign`, {
                     //body: JSON.stringify(email),
                     headers: new Headers({
                         'Authorization': `Bearer ${auth.token}`,
@@ -535,7 +543,7 @@ export const getVendor = (vendor, auth) => {
             dispatch(fetchVendor(true));
              
             const _promise = await fetch(
-                `http://chopdawg.choicehomewarranty.com:8888/vendors/v1/vendor/${vendor.vendorId}`, {
+                baseUrl + `vendors/v1/vendor/${vendor.vendorId}`, {
                     //body: JSON.stringify(email),
                     headers: new Headers({
                         'Authorization': `Bearer ${auth.token}`,
@@ -570,7 +578,7 @@ export const postVendor = (vendor, auth) => {
             dispatch(fetchVendorUpdate(true));
              
             const _promise = await fetch(
-                `http://chopdawg.choicehomewarranty.com:8888/vendors/v1/vendor/${vendor.vendorId}`, {
+                baseUrl + `vendors/v1/vendor/${vendor.vendorId}`, {
                     headers: new Headers({
                         'Authorization': `Bearer ${auth.token}`,
                         'Content-Type': 'application/json'
@@ -604,7 +612,7 @@ export const getVendorUserDisable = (vendor, user, auth) => {
             dispatch(fetchVendorUserDisable(true));
              
             const _promise = await fetch(
-                `http://chopdawg.choicehomewarranty.com:8888/vendors/v1/vendor/${vendor.vendorId}/user/${user.id}/disable`, {
+                baseUrl + `vendors/v1/vendor/${vendor.vendorId}/user/${user.id}/disable`, {
                     headers: new Headers({
                         'Authorization': `Bearer ${auth.token}`,
                         'Content-Type': 'application/json'
@@ -640,7 +648,7 @@ export const getWorkOrderDetails = (workorder, auth) => {
             dispatch(fetchWorkOrderDetails(true));
              
             const _promise = await fetch(
-                `http://chopdawg.choicehomewarranty.com:8888/vendors/v1/workorder/${workorder.workOrderNum}`, {
+                baseUrl + `vendors/v1/workorder/${workorder.workOrderNum}`, {
                     headers: new Headers({
                         'Authorization': `Bearer ${auth.token}`,
                         'Content-Type': 'application/json'
@@ -674,7 +682,7 @@ export const getWorkOrderDetailsVendor = (user, workorder, auth) => {
             dispatch(fetchWorkOrderDetailsVendor(true));
              
             const _promise = await fetch(
-                `http://chopdawg.choicehomewarranty.com:8888/vendors/v1/vendor/${user.vendorId}/workorder/${workorder.workOrderNum}`, {
+                baseUrl + `vendors/v1/vendor/${user.vendorId}/workorder/${workorder.workOrderNum}`, {
                     headers: new Headers({
                         'Authorization': `Bearer ${auth.token}`,
                         'Content-Type': 'application/json'
@@ -700,6 +708,41 @@ export const getWorkOrderDetailsVendor = (user, workorder, auth) => {
     }
 }
 
+
+
+// get unclaimed work order
+// TRY_WORKORDER_UNCLAIMED
+export const getWorkOrdersUnclaimed = (user, auth) => {
+    return async dispatch => {
+        try {
+            dispatch(fetchWorkOrdersUnclaimed(true));
+             
+            const _promise = await fetch(
+                baseUrl + `vendors/v1/vendor/${user.vendorId}/workorder?filter=unclaimed`, {
+                    headers: new Headers({
+                        'Authorization': `Bearer ${auth.token}`,
+                        'Content-Type': 'application/json'
+                      }),
+                    method: 'GET',
+                }
+            );
+            
+            const _results = await _promise.json();
+           
+            if(_results.status == "error"){
+                dispatch(fetchWorkOrdersUnclaimedRejected(_results))
+                // display the results
+            } else {
+                dispatch(fetchWorkOrdersUnclaimedFulfilled(_results.message));
+                
+            }
+            
+        } catch(error) {
+            dispatch(fetchWorkOrdersUnclaimedRejected(error))
+        }
+    }
+}
+
 // accept/reject a work order
 // TRY_WORKORDER_ACCEPT
 export const getWorkOrderAcceptance = (workorder, answer, auth) => {
@@ -708,7 +751,7 @@ export const getWorkOrderAcceptance = (workorder, answer, auth) => {
             dispatch(fetchWorkOrderAcceptance(true));
              
             const _promise = await fetch(
-                `http://chopdawg.choicehomewarranty.com:8888/vendors/v1/workorder/${workorder.workOrderNum}/acceptance`, {
+                baseUrl + `vendors/v1/workorder/${workorder.workOrderNum}/acceptance`, {
                     headers: new Headers({
                         'Authorization': `Bearer ${auth.token}`,
                         'Content-Type': 'application/json'
@@ -742,7 +785,7 @@ export const getWorkOrderSchedule = (workorder, schedule, auth) => {
             dispatch(fetchWorkOrderSchedule(true));
              
             const _promise = await fetch(
-                `http://chopdawg.choicehomewarranty.com:8888/vendors/v1/workorder/${workorder.workOrderNum}/schedule`, {
+                baseUrl + `vendors/v1/workorder/${workorder.workOrderNum}/schedule`, {
                     headers: new Headers({
                         'Authorization': `Bearer ${auth.token}`,
                         'Content-Type': 'application/json'
@@ -776,7 +819,7 @@ export const getWorkOrderNote = (workorder, note, auth) => {
             dispatch(fetchWorkOrderNote(true));
              
             const _promise = await fetch(
-                `http://chopdawg.choicehomewarranty.com:8888/vendors/v1/workorder/${workorder.workOrderNum}/note`, {
+                baseUrl + `vendors/v1/workorder/${workorder.workOrderNum}/note`, {
                     headers: new Headers({
                         'Authorization': `Bearer ${auth.token}`,
                         'Content-Type': 'application/json'

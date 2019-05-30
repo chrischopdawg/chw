@@ -1,5 +1,6 @@
 import { colors } from '../styles/index.style';
 import { messages } from '../constants/messages';
+import store from './store';
 
 const initialState = {
     loading: true, // Have the loading state indicate if it's done getting data.
@@ -7,7 +8,13 @@ const initialState = {
     auth: null, // Authorization,
     messageAuth: null,
     messageResetPassword: null,
-    notifications: []
+    notifications: [],
+    message: {
+        showPopdown: false,
+        message: '',
+        type: 'error'
+    },
+    workordersUnclaimed: []
 }
 
 const _showMessageOptions = (message, type) => {
@@ -40,8 +47,14 @@ const reducer = (state = initialState, action) => {
         case TRY_AUTH_FULFILLED:
             return {...state, auth: {token: action.payload}, loading: action.loading};
         case TRY_AUTH_REJECTED:
+            const message = {
+                showPopdown: true,
+                message: messages.TRY_AUTH_REJECTED,
+                type: 'error'
+            }
+            store.setState({message:message});
             //return {...state, messageLogin: _showMessageOptions(messages.TRY_AUTH_REJECTED, action.payload.status), auth: action.payload, loading: action.loading};
-            return {...state, auth: action.payload, loading: action.loading};
+            return {...state, message:message, auth: action.payload, loading: action.loading};
         case TRY_REGISTER:
             return {...state, loading: action.payload};
         case TRY_REGISTER_FULFILLED:
@@ -54,7 +67,7 @@ const reducer = (state = initialState, action) => {
         case TRY_USERS_FULFILLED:
             return {...state, users: action.payload, loading: action.loading};
         case TRY_USERS_REJECTED:
-
+            console.log(action.payload);
             return {...state, message: action.payload, loading: action.loading};
         case TRY_RESET_PASSWORD:
             return {...state, loading: action.payload};
@@ -79,11 +92,16 @@ const reducer = (state = initialState, action) => {
         case TRY_USER_NOTIFICATIONS: 
             return {...state, loading: action.payload};
         case TRY_USER_NOTIFICATIONS_FULFILLED:
-            return {...state, notifications: action.payload.message, loading: action.loading};
-
+            return {...state, notifications: action.payload, loading: action.loading};
         case TRY_USER_NOTIFICATIONS_REJECTED:
             return {...state, message: action.payload.message, loading: action.loading};
 
+        case TRY_WORKORDER_UNCLAIMED:
+            return {...state, loading: action.payload};
+        case TRY_WORKORDER_UNCLAIMED_FULFILLED:
+            return {...state, workordersUnclaimed: action.payload, loading: action.loading};
+        case TRY_WORKORDER_UNCLAIMED_REJECTED:
+                return {...state, message: action.payload.message, loading: action.loading};
         default: 
             return state;
     }
@@ -652,6 +670,39 @@ export const fetchWorkOrderDetailsVendorRejected = (error) => {
     };
 }
 
+
+
+// Get unclaimed work orders
+const TRY_WORKORDER_UNCLAIMED = 'TRY_WORKORDER_UNCLAIMED';
+const TRY_WORKORDER_UNCLAIMED_FULFILLED = 'TRY_WORKORDER_UNCLAIMED_FULFILLED';
+const TRY_WORKORDER_UNCLAIMED_REJECTED = 'TRY_WORKORDER_UNCLAIMED_REJECTED';
+
+//Define your action create that set your loading state.
+export const fetchWorkOrdersUnclaimed = (bool) => {
+    //return a action type and a loading state indicating it is getting data. 
+    return {
+        type: TRY_WORKORDER_UNCLAIMED,
+        payload: bool,
+    };
+}
+//Define a action creator to set your loading state to false, and return the data when the promise is resolved
+export const fetchWorkOrdersUnclaimedFulfilled = (data) => {
+    //Return a action type and a loading to false, and the data.
+    return {
+        type: TRY_WORKORDER_UNCLAIMED_FULFILLED,
+        payload: data,
+        loading: false,
+    };
+}
+//Define a action creator that catches a error and sets an errorMessage
+export const fetchWorkOrdersUnclaimedRejected = (error) => {
+    //Return a action type and a payload with a error
+    return {
+        type: TRY_WORKORDER_UNCLAIMED_REJECTED,
+        payload: error,
+        loading: false,
+    };
+}
 
 
 // Get Schedule for work order request
