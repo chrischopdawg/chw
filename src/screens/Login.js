@@ -9,7 +9,7 @@ import store, { postAuthToken } from '../redux/store';
 import { Actions } from 'react-native-router-flux';
 import PopdownComponent from '../components/Popdown';
 
-import FlashMessage, { showMessage } from 'react-native-flash-message';
+//import FlashMessage, { showMessage } from 'react-native-flash-message';
 //import { ActionSheetCustom as ActionSheet } from 'react-native-custom-actionsheet'
 
 

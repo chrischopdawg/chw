@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import FlashMessage, { showMessage } from 'react-native-flash-message';
+//import FlashMessage, { showMessage } from 'react-native-flash-message';
 
 const mapStateToProps = state => ({
     //auth: state.auth,
@@ -28,7 +28,7 @@ class CHWFlashMessage extends React.Component {
         }, 200);
     
         return (
-            <FlashMessage ref={this.props.ref} position="top" />
+            <View ref={this.props.ref} position="top"></View>
         );
     }
     render () {

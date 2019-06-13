@@ -7,7 +7,7 @@ import { TextInput } from 'react-native-gesture-handler';
 import LinearGradient from 'react-native-linear-gradient';
 import { connect } from 'react-redux';
 import store, { postPassword } from '../redux/store';
-import FlashMessage, { showMessage } from 'react-native-flash-message';
+//import FlashMessage, { showMessage } from 'react-native-flash-message';
 
 
 //Map the redux state to your props.
